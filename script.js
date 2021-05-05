@@ -1,3 +1,8 @@
+'use strict';
+
+const MAIN_PLACHEHOLDER_ID = "main-countdown-placeholder";
+const BIRTHDAY_PLACHEHOLDER_ID = "birthday-countdown-placeholder"
+
 const timers = [
     ["Дембель Карима", "June 02, 2021 09:00:00"],
     ["Дембель Сани", "Dec 06, 2021 09:00:00"],
@@ -63,59 +68,75 @@ function getDivTimeout(title) {
     `;
 }
 
-function timerTick() {
-    timers.forEach((element, index) => {
-        const title = element[0];
+function insertInHTMLIf(element, html, condition) {
+    if (condition) {
+        element.innerHTML = html;
+    } else {
+        element.insertAdjacentHTML("beforeend", html);
+    }
+}
+
+function mainTimerTick() {
+    timers.forEach((timer, index) => {
+        const title = timer[0];
         const currentDate = new Date().getTime();
-        const endDate = new Date(element[1]);
+        const endDate = new Date(timer[1]);
         const diff = endDate - currentDate;
 
-        if (index === 0) {
-            if (diff > 0)
-                document.getElementById("placeholder").innerHTML = getDiv(title, diff);
-            else
-                document.getElementById("placeholder").innerHTML = getDivTimeout(title);
-        } else {
-            if (diff > 0)
-                document.getElementById("placeholder").insertAdjacentHTML("beforeend", getDiv(
-                    title, diff
-                ));
-            else
-                document.getElementById("placeholder").insertAdjacentHTML("beforeend", getDivTimeout(
-                    title
-                ));
-        }
+        const html = diff > 0 ? getDiv(title, diff) : getDivTimeout(title);
+
+        insertInHTMLIf(document.getElementById(MAIN_PLACHEHOLDER_ID), html, index === 0)
     });
+}
 
-    const nextYearBD = [];
+function isToday(date) {
+    return new Date().getDate() === date.getDate() && new Date().getMonth() === date.getMonth();
+}
 
-    birthdays.forEach((element) => {
-        const title = element[0]
+function birthdayTimerTick() {
+    const todayBirthdays = [];
+    const futureBirthdays = [];
+    const pastBirthdays = [];
+
+    birthdays.forEach((timer) => {
+        const title = timer[0]
         const currentDate = new Date().getTime();
-        const birthday = new Date(element[1] + ", " + new Date().getFullYear());
+        const birthday = new Date(timer[1] + ", " + new Date().getFullYear());
         const diff = birthday - currentDate;
 
         // Birthday today
-        if (new Date().getDate() === birthday.getDate() && new Date().getMonth() === birthday.getMonth()) {
-            document.getElementById("placeholder").insertAdjacentHTML("beforeend", getDivTimeout(title));
+        if (isToday(birthday)) {
+            todayBirthdays.push({title, diff: 0})
         }
         // Birthday this year
         else if (currentDate < birthday) {
-            document.getElementById("placeholder").insertAdjacentHTML("beforeend", getDiv(title, diff));
+            futureBirthdays.push({title, diff});
         }
         // Birthday was this year
         else if (currentDate > birthday) {
-            const new_diff = new Date(element[1] + ", " + (new Date().getFullYear() + 1)) - currentDate;
-            nextYearBD.push([title, new_diff]);
+            const new_diff = new Date(timer[1] + ", " + (new Date().getFullYear() + 1)) - currentDate;
+            pastBirthdays.push({title, diff: new_diff});
         }
     });
 
-    nextYearBD.forEach(element => {
-        const title = element[0];
-        const diff = element[1];
+    let inserted = 0;
+    todayBirthdays.forEach(({title}) => {
+        insertInHTMLIf(document.getElementById(BIRTHDAY_PLACHEHOLDER_ID), getDivTimeout(title), inserted === 0);
+        inserted++;
+    })
+    futureBirthdays.forEach(({title, diff}) => {
+        insertInHTMLIf(document.getElementById(BIRTHDAY_PLACHEHOLDER_ID), getDiv(title,diff), inserted === 0);
+        inserted++;
+    })
+    pastBirthdays.forEach(({title, diff}) => {
+        insertInHTMLIf(document.getElementById(BIRTHDAY_PLACHEHOLDER_ID), getDiv(title, diff), inserted === 0);
+        inserted++;
+    })
+}
 
-        document.getElementById("placeholder").insertAdjacentHTML("beforeend", getDiv(title, diff));
-    });
+function timerTick() {
+    mainTimerTick()
+    birthdayTimerTick()
 }
 
 function setTimer() {
@@ -124,3 +145,5 @@ function setTimer() {
 }
 
 document.addEventListener("DOMContentLoaded", setTimer);
+
+const tabs = Tabs();
