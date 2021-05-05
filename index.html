@@ -4,43 +4,37 @@
 	<meta name="viewport" content="width=500, initial-scale=1">
 	<link rel="shortcut icon" href="images/icon.png" type="image/png">
 	<link rel="stylesheet" href="index.css">
-	<script src="script.js"></script>
+    <link rel="stylesheet" href="header.css">
+    <script src="tabs.js"></script>
 	<title>Oldfack Countdown</title>
 </head>
 	<body class="body">
-		<h1 class="main-title">Oldfack Countdown</h1>
-		<div id="placeholder">
-			<!-- Adding after script !-->
-			<!--
-			<div class="countdown">
-				<div class="countdown-title">${element[0]}</div>
-				<div class="countdown-numbers">
-					<div class="countdown-number">
-						<span class="days countdown-time">${days}</span>
-						<span class="countdown-text">Дней</span>
-					</div>
-					<div class="countdown-number">
-						<span class="hours countdown-time">${hours}</span>
-						<span class="countdown-text">Часов</span>
-						</div>
-					<div class="countdown-number">
-						<span class="minutes countdown-time">${minutes}</span>
-						<span class="countdown-text">Минут</span>
-					</div>
-					<div class="countdown-number">
-						<span class="seconds countdown-time">${seconds}</span>
-						<span class="countdown-text">Секунд</span>
-					</div>
-				</div>
-			</div>
-			<br>
-			!-->
-		</div>
-		<div class="image-container body__image-container body__image-container_one">
-			<img class="image image_one" src="images/image1.png" alt="аниме">
-		</div>
-		<div class="image-container body__image-container body__image-container_second">
-			<img class="image image_second" src="images/image2.png" alt="аниме">
-		</div>
-	</body>
+        <div class="header">
+            <h1 class="main-title" >Oldfack Countdown</h1>
+
+            <div class="navigation-bar header__item">
+                <button class="tab-button navigation-bar__tab-button" data-tab="main">
+                    Основное
+                </button>
+                <button class="tab-button navigation-bar__tab-button" data-tab="birthday">
+                    Дни рождения
+                </button>
+                </div>
+            </div>
+        <div class="tab tab_selected" id="main">
+            <div id="main-countdown-placeholder"></div>
+            <div class="image-container body__image-container body__image-container_one">
+                <img class="image image_one" src="images/image1.png" alt="аниме">
+            </div>
+            <div class="image-container body__image-container body__image-container_second">
+                <img class="image image_second" src="images/image2.png" alt="аниме">
+            </div>
+        </div>
+        <div class="tab" id="birthday">
+            <div id="birthday-countdown-placeholder">
+            </div>
+        </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
 </html>
