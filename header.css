@@ -1,0 +1,50 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navigation-bar {
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.tab-button {
+    position: relative;
+    display: inline-block;
+
+    padding: 14px 28px;
+
+    border: 0;
+    border-radius: 30px;
+
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+
+    transition: all .1s ease;
+    background-color: #5D604B;
+}
+
+.tab-button:hover {
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.tab-button:active {
+    box-shadow: inset 0 3px 0 0 rgba(0, 0, 0, 0.15);
+
+    transform: translateY(1px);
+}
+
+.tab-button:focus {
+    outline: none;
+}
+
+.navigation-bar__tab-button {
+    margin: 14px;
+}
