@@ -22,14 +22,14 @@ const birthdays = [
     ["Никита", "Nov 23"]
 ];
 
-function getDiv(title, diff) {
+function getDiv(title, diff, date) {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     return `
-        <div class="countdown">
+        <div class="countdown" title="${date}">
             <div class="countdown-title">${title}</div>
             <div class="countdown-numbers">
                 <div class="countdown-number">
@@ -83,7 +83,7 @@ function mainTimerTick() {
         const endDate = new Date(timer[1]);
         const diff = endDate - currentDate;
 
-        const html = diff > 0 ? getDiv(title, diff) : getDivTimeout(title);
+        const html = diff > 0 ? getDiv(title, diff, timer[1]) : getDivTimeout(title);
 
         insertInHTMLIf(document.getElementById(MAIN_PLACHEHOLDER_ID), html, index === 0)
     });
@@ -99,37 +99,47 @@ function birthdayTimerTick() {
     const pastBirthdays = [];
 
     birthdays.forEach((timer) => {
-        const title = timer[0]
+        const title = timer[0];
+        const birthday_str = timer[1];
         const currentDate = new Date().getTime();
         const birthday = new Date(timer[1] + ", " + new Date().getFullYear());
         const diff = birthday - currentDate;
 
         // Birthday today
         if (isToday(birthday)) {
-            todayBirthdays.push({title, diff: 0})
+            todayBirthdays.push({title, diff: 0, birthday_str});
         }
         // Birthday this year
         else if (currentDate < birthday) {
-            futureBirthdays.push({title, diff});
+            futureBirthdays.push({title, diff, birthday_str});
         }
         // Birthday was this year
         else if (currentDate > birthday) {
             const new_diff = new Date(timer[1] + ", " + (new Date().getFullYear() + 1)) - currentDate;
-            pastBirthdays.push({title, diff: new_diff});
+            pastBirthdays.push({title, diff: new_diff, birthday_str});
         }
     });
 
     let inserted = 0;
     todayBirthdays.forEach(({title}) => {
-        insertInHTMLIf(document.getElementById(BIRTHDAY_PLACHEHOLDER_ID), getDivTimeout(title), inserted === 0);
+        insertInHTMLIf(
+            document.getElementById(BIRTHDAY_PLACHEHOLDER_ID),
+            getDivTimeout(title),
+            inserted === 0);
         inserted++;
     })
-    futureBirthdays.forEach(({title, diff}) => {
-        insertInHTMLIf(document.getElementById(BIRTHDAY_PLACHEHOLDER_ID), getDiv(title,diff), inserted === 0);
+    futureBirthdays.forEach(({title, diff, birthday_str}) => {
+        insertInHTMLIf(
+            document.getElementById(BIRTHDAY_PLACHEHOLDER_ID),
+            getDiv(title, diff, birthday_str),
+            inserted === 0);
         inserted++;
     })
-    pastBirthdays.forEach(({title, diff}) => {
-        insertInHTMLIf(document.getElementById(BIRTHDAY_PLACHEHOLDER_ID), getDiv(title, diff), inserted === 0);
+    pastBirthdays.forEach(({title, diff, birthday_str}) => {
+        insertInHTMLIf(
+            document.getElementById(BIRTHDAY_PLACHEHOLDER_ID),
+            getDiv(title, diff, birthday_str),
+            inserted === 0);
         inserted++;
     })
 }

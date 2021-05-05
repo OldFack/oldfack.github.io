@@ -16,6 +16,7 @@
 
 .tab {
     display: none;
+    margin-bottom: 50px;
 }
 
 .tab_selected {
